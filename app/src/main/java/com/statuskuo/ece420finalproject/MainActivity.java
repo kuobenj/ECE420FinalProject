@@ -67,12 +67,22 @@ public class MainActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+//                // Image captured and saved to fileUri specified in the Intent
+//                Toast.makeText(this, "Image saved to:\n" +
+//                        data.getData(), Toast.LENGTH_LONG).show();
+//                // Display the extras
+////                Log.d("Getting Extras", (data.getExtras()).toString());
+//                ImageView jpgView = (ImageView)findViewById(R.id.jpgview);
+//                Bitmap d = BitmapFactory.decodeFile(String.valueOf(data.getData()));
+////                Bitmap d = BitmapFactory.decodeFile(String.valueOf(data.getExtras().get(MediaStore.EXTRA_OUTPUT)));
+//                jpgView.setImageBitmap(d);
                 // Image captured and saved to fileUri specified in the Intent
                 Toast.makeText(this, "Image saved to:\n" +
-                        data.getData(), Toast.LENGTH_LONG).show();
-
+                        fileUri.toString(), Toast.LENGTH_LONG).show();
+                // Display the extras
+//                Log.d("Getting Extras", (data.getExtras()).toString());
                 ImageView jpgView = (ImageView)findViewById(R.id.jpgview);
-                Bitmap d = BitmapFactory.decodeFile(String.valueOf(data.getData()));
+                Bitmap d = BitmapFactory.decodeFile(fileUri.toString());
 //                Bitmap d = BitmapFactory.decodeFile(String.valueOf(data.getExtras().get(MediaStore.EXTRA_OUTPUT)));
                 jpgView.setImageBitmap(d);
             } else if (resultCode == RESULT_CANCELED) {
