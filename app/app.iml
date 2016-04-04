@@ -12,12 +12,10 @@
         <option name="SELECTED_TEST_ARTIFACT" value="_android_test_" />
         <option name="ASSEMBLE_TASK_NAME" value="assembleDebug" />
         <option name="COMPILE_JAVA_TASK_NAME" value="compileDebugSources" />
+        <option name="SOURCE_GEN_TASK_NAME" value="generateDebugSources" />
         <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleDebugAndroidTest" />
         <option name="COMPILE_JAVA_TEST_TASK_NAME" value="compileDebugAndroidTestSources" />
-        <afterSyncTasks>
-          <task>generateDebugAndroidTestSources</task>
-          <task>generateDebugSources</task>
-        </afterSyncTasks>
+        <option name="TEST_SOURCE_GEN_TASK_NAME" value="generateDebugAndroidTestSources" />
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
@@ -90,8 +88,60 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="support-annotations-22.2.0" level="project" />
+    <orderEntry type="library" exported="" name="opencv-windows-x86_64" level="project" />
+    <orderEntry type="library" exported="" name="flandmark-linux-x86_64" level="project" />
+    <orderEntry type="library" exported="" name="libfreenect-macosx-x86_64" level="project" />
+    <orderEntry type="library" exported="" name="artoolkitplus-macosx-x86_64" level="project" />
+    <orderEntry type="library" exported="" name="libdc1394" level="project" />
+    <orderEntry type="library" exported="" name="flycapture" level="project" />
+    <orderEntry type="library" exported="" name="artoolkitplus-android-arm" level="project" />
+    <orderEntry type="library" exported="" name="flandmark-windows-x86" level="project" />
+    <orderEntry type="library" exported="" name="opencv-android-x86" level="project" />
+    <orderEntry type="library" exported="" name="libdc1394-macosx-x86_64" level="project" />
+    <orderEntry type="library" exported="" name="libfreenect-linux-x86" level="project" />
+    <orderEntry type="library" exported="" name="opencv-macosx-x86_64" level="project" />
+    <orderEntry type="library" exported="" name="ffmpeg" level="project" />
+    <orderEntry type="library" exported="" name="opencv-linux-x86" level="project" />
+    <orderEntry type="library" exported="" name="opencv-linux-x86_64" level="project" />
+    <orderEntry type="library" exported="" name="ffmpeg-linux-x86_64" level="project" />
+    <orderEntry type="library" exported="" name="flycapture-linux-x86" level="project" />
+    <orderEntry type="library" exported="" name="flycapture-windows-x86" level="project" />
+    <orderEntry type="library" exported="" name="flandmark-windows-x86_64" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.2.0" level="project" />
+    <orderEntry type="library" exported="" name="videoinput" level="project" />
+    <orderEntry type="library" exported="" name="artoolkitplus-linux-x86_64" level="project" />
+    <orderEntry type="library" exported="" name="ffmpeg-android-x86" level="project" />
+    <orderEntry type="library" exported="" name="ffmpeg-macosx-x86_64" level="project" />
+    <orderEntry type="library" exported="" name="videoinput-windows-x86_64" level="project" />
+    <orderEntry type="library" exported="" name="libfreenect-windows-x86" level="project" />
+    <orderEntry type="library" exported="" name="javacpp" level="project" />
+    <orderEntry type="library" exported="" name="flandmark-android-x86" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-22.2.0" level="project" />
+    <orderEntry type="library" exported="" name="libdc1394-linux-x86_64" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-22.2.0" level="project" />
+    <orderEntry type="library" exported="" name="ffmpeg-windows-x86" level="project" />
+    <orderEntry type="library" exported="" name="libfreenect-windows-x86_64" level="project" />
+    <orderEntry type="library" exported="" name="flandmark-macosx-x86_64" level="project" />
+    <orderEntry type="library" exported="" name="libdc1394-linux-x86" level="project" />
+    <orderEntry type="library" exported="" name="ffmpeg-linux-x86" level="project" />
+    <orderEntry type="library" exported="" name="flycapture-linux-x86_64" level="project" />
+    <orderEntry type="library" exported="" name="ffmpeg-android-arm" level="project" />
+    <orderEntry type="library" exported="" name="artoolkitplus-windows-x86_64" level="project" />
+    <orderEntry type="library" exported="" name="libfreenect-linux-x86_64" level="project" />
+    <orderEntry type="library" exported="" name="artoolkitplus" level="project" />
+    <orderEntry type="library" exported="" name="artoolkitplus-windows-x86" level="project" />
+    <orderEntry type="library" exported="" name="artoolkitplus-android-x86" level="project" />
+    <orderEntry type="library" exported="" name="flandmark-android-arm" level="project" />
+    <orderEntry type="library" exported="" name="flandmark-linux-x86" level="project" />
+    <orderEntry type="library" exported="" name="artoolkitplus-linux-x86" level="project" />
+    <orderEntry type="library" exported="" name="videoinput-windows-x86" level="project" />
+    <orderEntry type="library" exported="" name="ffmpeg-windows-x86_64" level="project" />
+    <orderEntry type="library" exported="" name="flandmark" level="project" />
+    <orderEntry type="library" exported="" name="opencv-android-arm" level="project" />
+    <orderEntry type="library" exported="" name="flycapture-windows-x86_64" level="project" />
+    <orderEntry type="library" exported="" name="opencv-windows-x86" level="project" />
+    <orderEntry type="library" exported="" name="javacv" level="project" />
+    <orderEntry type="library" exported="" name="libfreenect" level="project" />
+    <orderEntry type="library" exported="" name="opencv" level="project" />
   </component>
 </module>

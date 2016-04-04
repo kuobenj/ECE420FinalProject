@@ -67,24 +67,25 @@ public class MainActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-//                // Image captured and saved to fileUri specified in the Intent
-//                Toast.makeText(this, "Image saved to:\n" +
-//                        data.getData(), Toast.LENGTH_LONG).show();
-//                // Display the extras
-////                Log.d("Getting Extras", (data.getExtras()).toString());
-//                ImageView jpgView = (ImageView)findViewById(R.id.jpgview);
-//                Bitmap d = BitmapFactory.decodeFile(String.valueOf(data.getData()));
-////                Bitmap d = BitmapFactory.decodeFile(String.valueOf(data.getExtras().get(MediaStore.EXTRA_OUTPUT)));
-//                jpgView.setImageBitmap(d);
                 // Image captured and saved to fileUri specified in the Intent
                 Toast.makeText(this, "Image saved to:\n" +
                         fileUri.toString(), Toast.LENGTH_LONG).show();
                 // Display the extras
 //                Log.d("Getting Extras", (data.getExtras()).toString());
+
+                //display image
                 ImageView jpgView = (ImageView)findViewById(R.id.jpgview);
-                Bitmap d = BitmapFactory.decodeFile(fileUri.toString());
+                File myFile = new File(fileUri.getPath());
+                Bitmap d = BitmapFactory.decodeFile(myFile.getAbsolutePath());
 //                Bitmap d = BitmapFactory.decodeFile(String.valueOf(data.getExtras().get(MediaStore.EXTRA_OUTPUT)));
                 jpgView.setImageBitmap(d);
+
+                //display processed image
+                ImageView jpgView2 = (ImageView)findViewById(R.id.jpgview2);
+                Smoother smooth_operation = new Smoother();
+                smooth_operation.smooth(myFile.getAbsolutePath());
+                d = BitmapFactory.decodeFile(myFile.getAbsolutePath()+"smoothed.jpg");
+                jpgView2.setImageBitmap(d);
             } else if (resultCode == RESULT_CANCELED) {
                 // User cancelled the image capture
                 Toast.makeText(this, "Image Capture Canceled", Toast.LENGTH_LONG).show();
