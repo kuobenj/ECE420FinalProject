@@ -9,6 +9,8 @@ import android.util.Log;
 
 import org.bytedeco.javacpp.Loader;
 import org.bytedeco.javacpp.opencv_core;
+import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.OpenCVFrameConverter;
 
 import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
@@ -24,24 +26,37 @@ public class PreProcessor {
             Log.e("Image Error", "failed to load input image\n");
             return;
         }
+        else {
+            Log.d("Image Loading", "Image Loaded Successfully");
+        }
 
         //Convert to mat
         Mat orig = cvarrToMat(pInpImg);  // default additional arguments: don't copy data.
         Mat output = orig;
 
+        Log.d("Image Conversion", "Image Converted to Mat");
 
         /**********  Code for contour detection **********/
         //Convert to grayscale
         Mat gray = new Mat();
         cvtColor(orig, gray, CV_BGR2GRAY);
 
+        Log.d("Image Conversion", "Image Converted to Gray");
+
         //Gaussian blur to remove noise
         GaussianBlur(gray, gray, new Size(5, 5), 0, 0, BORDER_DEFAULT);
+
+        Log.d("Image Conversion", "Image Blurred");
 
         //Create threshold image
         Mat thresh = new Mat();
         adaptiveThreshold(gray, thresh, 255, 1, 1, 11, 2);
 
+        Log.d("Image Conversion", "Image Thresholded");
+
+        cvSaveImage(filename + "greyandthresh.jpg", new IplImage(thresh));
+
+        Log.d("Image Conversion", "Thresholded image saved");
 
         /**********  Finding contours  **********/
 //        vector<vector<Point> > contours;
@@ -52,9 +67,11 @@ public class PreProcessor {
         CvSeq contour2 = new CvSeq(null);
         CvSeq points = new CvSeq(null);
         CvMemStorage storage = CvMemStorage.create();
-        cvFindContours(new CvArr(thresh), storage, contour, Loader.sizeof(CvContour.class),
-                CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
+        cvFindContours(new IplImage(thresh), storage, contour, Loader.sizeof(CvContour.class),
+                CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
         contour2 = contour;
+
+        Log.d("Contours", "Contours Found");
 
         /**********  Finding largest countour **********/
         //cout << "# of contours dectected: " << contours.size() << endl;
@@ -90,7 +107,7 @@ public class PreProcessor {
                     largest_contour_index = i;
                     points = cvApproxPoly(contour, Loader.sizeof(CvContour.class),
                             storage, CV_POLY_APPROX_DP, cvContourPerimeter(contour) * 0.02, 0);
-                    bounding_rect = boundingRect(new Mat(points)); // Find the bounding rectangle for biggest contour
+//                    bounding_rect = boundingRect(new Mat(points)); // Find the bounding rectangle for biggest contour
                     i++;
                 }
 
@@ -140,14 +157,14 @@ public class PreProcessor {
 
 //        output = orig;
 
-        CvArr dst = new CvArr(thresh);
+        IplImage dst = new IplImage(thresh);
 
 //        i = 0;
         // Draw the largest contour using previously stored index.
 //        while (contour != null && !contour.isNull()) {
 //            if (contour.elem_size() > 0) {
 //                if (i == largest_contour_index) {
-        cvDrawContours(dst, points, CvScalar.BLUE, CvScalar.BLUE, -1, 1, CV_AA);
+        cvDrawContours(dst, points, CvScalar.RED, CvScalar.RED, -1, 1, CV_AA);
 //                }
 //                i++;
 //            }
