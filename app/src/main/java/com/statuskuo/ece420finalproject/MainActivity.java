@@ -86,6 +86,13 @@ public class MainActivity extends ActionBarActivity {
                 smooth_operation.smooth(myFile.getAbsolutePath());
                 d = BitmapFactory.decodeFile(myFile.getAbsolutePath()+"smoothed.jpg");
                 jpgView2.setImageBitmap(d);
+
+                //display second processed image (finding box)
+                ImageView jpgView3 = (ImageView)findViewById(R.id.jpgview2);
+                PreProcessor preprocessor_operation = new PreProcessor();
+                preprocessor_operation.preprocess(myFile.getAbsolutePath());
+                d = BitmapFactory.decodeFile(myFile.getAbsolutePath()+"processed.jpg");
+                jpgView3.setImageBitmap(d);
             } else if (resultCode == RESULT_CANCELED) {
                 // User cancelled the image capture
                 Toast.makeText(this, "Image Capture Canceled", Toast.LENGTH_LONG).show();
