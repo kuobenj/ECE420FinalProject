@@ -1,43 +1,61 @@
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimage
 
-img = cv2.cvtColor(cv2.imread('trainCalibri1Bin.png'),cv2.COLOR_BGR2GRAY);
+def generateCharacterLines(img):
+	imgMap = (img/255) * -1 + 1
+	lineFinder = np.sum(imgMap, axis = 1)
+	characterLines = []
+	start = None
 
-imgMap = (img/255) * -1 + 1
+	for i in range(0, len(lineFinder)):
 
-lineFinder = np.sum(imgMap, axis = 1)
-
-characterLines = []
-characterRaw = []
-
-start = 0
-for i in range(0, len(lineFinder)):
-	if lineFinder[i] > 0 and lineFinder[i-1] == 0:
-		start = i
-	elif lineFinder[i] == 0 and lineFinder[i-1] > 0:
-		characterLines.append(img[start:(i-1)])
-
-for l in range(0, len(characterLines)):
-	charFinder = np.sum((characterLines[l]/255)*-1 + 1, axis = 0)
-	start = 0
-	for i in range(0, len(charFinder)):
-		if charFinder[i] > 0 and charFinder[i-1] == 0:
+		if lineFinder[i] > 0 and (lineFinder[i-1] == 0 or start is None):
 			start = i
-		elif charFinder[i] == 0 and charFinder[i-1] > 0:
-			characterRaw.append(characterLines[l][:, start:(i-1)])
+		elif lineFinder[i] == 0 and lineFinder[i-1] > 0 and start is not None:
+			characterLines.append(img[start:(i-1)])
+			start = None
 
-for i in range(0, len(characterRaw)):
-	print i
-	cv2.imwrite('train1/train1'+str(i)+'.png', characterRaw[i])
+	return characterLines
 
-cv2.imwrite('train1_0.png', characterRaw[0])
+def generateCharacterFromLines(characterLines):
+	characterRaw = []
 
-cv2.imwrite('output.png',characterLines[0])
-#plt.imshow(characterLines[0], cmap='Greys')
+	for l in range(0, len(characterLines)):
+		charFinder = np.sum((characterLines[l]/255)*-1 + 1, axis = 0)
+		start = None
+		for i in range(0, len(charFinder)):
+			if charFinder[i] > 0 and (charFinder[i-1] == 0 or start is None):
+				start = i
+			elif charFinder[i] == 0 and charFinder[i-1] > 0 and start is not None:
+				characterRaw.append(characterLines[l][:, start:(i-1)])
+				start = None
 
-print len(lineFinder)
-plt.show()
+	return characterRaw
 
-print repr(img)
+def generateCharacterFormatted(characterRaw):
+	characterData = []
+	for i in range(0, len(characterRaw)):
+		charInv = np.invert(characterRaw[i])
+		top = 0
+		bottom = charInv.shape[0] - 1
+		while np.sum(charInv[top, :]) == 0 and top < bottom:
+			top = top + 1
+		while np.sum(charInv[bottom, :]) == 0 and bottom > top:
+			bottom = bottom - 1
+		characterBound = characterRaw[i][top:bottom, :]
+		character = np.full((28, 28), 255.0, dtype = np.uint8)
+		character[4:24, 4:24] = cv2.resize(characterBound, (20, 20), interpolation = cv2.INTER_LINEAR )
+		character[character >= 200] = 255
+		character[character < 200] = 0
+		characterData.append(character)
+	return characterData
+
+def trainingDataFileAwayFileAwaaaaay(characterData, filenamePre):
+	for i in range(0, len(characterData)):
+		cv2.imwrite(filenamePre+str(i)+'.png', characterData[i])
+
+def trainingSetFromFile(filename):
+	img = cv2.cvtColor(cv2.imread(filename),cv2.COLOR_BGR2GRAY);
+	characterData = generateCharacterFormatted(generateCharacterFromLines(generateCharacterLines(img)))
+	return characterData
+
