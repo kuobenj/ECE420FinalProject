@@ -1,17 +1,16 @@
 import cv2
 import numpy as np
 
-def generateCharacterLines(img):
+def generateCharacterLines(img, lineSpaceWidth = 1):
 	imgMap = (img/255) * -1 + 1
 	lineFinder = np.sum(imgMap, axis = 1)
 	characterLines = []
 	start = None
 
 	for i in range(0, len(lineFinder)):
-
-		if lineFinder[i] > 0 and (lineFinder[i-1] == 0 or start is None):
+		if lineFinder[i] > 0 and (np.sum(lineFinder[max(0,i-1-lineSpaceWidth):i-1]) == 0 or start is None):
 			start = i
-		elif lineFinder[i] == 0 and lineFinder[i-1] > 0 and start is not None:
+		elif np.sum(lineFinder[i:min(i+lineSpaceWidth, len(lineFinder) - 1)]) == 0 and lineFinder[i-1] > 0 and start is not None:
 			characterLines.append(img[start:(i-1)])
 			start = None
 
@@ -44,7 +43,24 @@ def generateCharacterFormatted(characterRaw):
 			bottom = bottom - 1
 		characterBound = characterRaw[i][top:bottom, :]
 		character = np.full((28, 28), 255.0, dtype = np.uint8)
-		character[4:24, 4:24] = cv2.resize(characterBound, (20, 20), interpolation = cv2.INTER_LINEAR )
+
+		height = characterBound.shape[0]
+		width = characterBound.shape[1]
+
+		if height > width:
+			newHeight = 20
+			newWidth = int(width * newHeight/height/2) * 2
+			if newWidth <= 0:
+				newWidth = 2
+		else:
+			newWidth = 20
+			newHeight = int(height * newWidth/width/2) * 2
+			if newHeight <= 0:
+				newHeight = 2
+
+		characterScaled = cv2.resize(characterBound, (newWidth, newHeight), interpolation = cv2.INTER_LINEAR )
+
+		character[(14 - newHeight/2):(14 + newHeight/2), (14 - newWidth/2):(14 + newWidth/2)] = characterScaled
 		character[character >= 200] = 255
 		character[character < 200] = 0
 		characterData.append(character)
@@ -54,8 +70,9 @@ def trainingDataFileAwayFileAwaaaaay(characterData, filenamePre):
 	for i in range(0, len(characterData)):
 		cv2.imwrite(filenamePre+str(i)+'.png', characterData[i])
 
-def trainingSetFromFile(filename):
+def trainingSetFromFile(filename, lineSpaceWidth = 1):
 	img = cv2.cvtColor(cv2.imread(filename),cv2.COLOR_BGR2GRAY);
-	characterData = generateCharacterFormatted(generateCharacterFromLines(generateCharacterLines(img)))
+	lines = generateCharacterLines(img, lineSpaceWidth)
+	characterData = generateCharacterFormatted(generateCharacterFromLines(lines))
 	return characterData
 
