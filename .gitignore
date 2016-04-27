@@ -5,3 +5,5 @@
 .DS_Store
 /build
 /captures
+/ocrPy/trainingData/*
+/ocrPy/testData/*
