@@ -61,9 +61,15 @@ def generateCharacterFormatted(characterRaw):
 
 		characterScaled = cv2.resize(characterBound, (newWidth, newHeight), interpolation = cv2.INTER_LINEAR )
 
+		characterScaled[characterScaled >= 200] = 255
+		characterScaled[characterScaled < 200] = 0
+
 		character[(14 - newHeight/2):(14 + newHeight/2), (14 - newWidth/2):(14 + newWidth/2)] = characterScaled
-		character[character >= 200] = 255
-		character[character < 200] = 0
+
+		character = np.invert(character)
+		character = cv2.filter2D(character, -1, np.ones((2,2)))
+		character = np.invert(character)
+		
 		characterData.append(character)
 		characterPos.append((top,bottom, width))
 

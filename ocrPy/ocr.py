@@ -38,7 +38,7 @@ for i in range(0, len(fileNames)):
 	trainFeatures = trainFeatures + features
 	trainLabels = trainLabels + ([i] * len(features))
 
-testFeaturesTup = generateFeatureData('testVectorBin5.png', '', 'testData/test5_')
+testFeaturesTup = generateFeatureData('exponent3out.png', '', 'testData/test5_')
 testFeatures = testFeaturesTup[0]
 testPos = testFeaturesTup[1]
 testData = np.asarray(testFeatures)
@@ -68,14 +68,14 @@ output = ''
 exponent = False
 for i in range(0,testData.shape[0]):
 	insertStr = ''
-	if heights[i] < 0.1*maxHeight and widths[i] < 0.1*maxHeight:
+	if heights[i] < 0.2*maxHeight and widths[i] < 0.2*maxHeight:
 		insertStr = '.'
 		result = 100
 	else:
 		testItem = testData[i]
 		result = svm.predict(testItem)
 		if i > 0 and result <= 9 and resultprev <= 11 and ((resultprev == 11 and testPos[i,1] < middles[i-1] - heights[i-1]*0.25) or (resultprev != 11 and testPos[i,1] < middles[i-1])):
-			insertStr = '^' + characterDict[int(result)]
+			insertStr = '^(' + characterDict[int(result)]
 			exponent = True
 		elif i > 0 and result < 100 and resultprev <= 9 and ((result == 11 and testPos[i-1,1] < middles[i] + heights[i]*0.25) or (resultprev != 11 and testPos[i-1,1] < middles[i])):
 			insertStr = ')' + characterDict[int(result)]
