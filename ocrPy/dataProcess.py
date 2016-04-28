@@ -33,6 +33,7 @@ def generateCharacterFromLines(characterLines):
 
 def generateCharacterFormatted(characterRaw):
 	characterData = []
+	characterPos = []
 	for i in range(0, len(characterRaw)):
 		charInv = np.invert(characterRaw[i])
 		top = 0
@@ -64,7 +65,9 @@ def generateCharacterFormatted(characterRaw):
 		character[character >= 200] = 255
 		character[character < 200] = 0
 		characterData.append(character)
-	return characterData
+		characterPos.append((top,bottom, width))
+
+	return (characterData, characterPos)
 
 def trainingDataFileAwayFileAwaaaaay(characterData, filenamePre):
 	for i in range(0, len(characterData)):

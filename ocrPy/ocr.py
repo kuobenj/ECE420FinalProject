@@ -4,7 +4,7 @@ from dataProcess import *
 import random
 
 characterDict = {0:'0', 1:'1', 2:'2', 3:'3', 4:'4', 5:'5', 6:'6', 7:'7', 8:'8', 9:'9',
-				 10:'x', 11:'y', 12:'(', 13:')', 14:'+', 15:'-', 16:'='}
+				 10:'x', 11:'y', 12:'(', 13:')', 14:'+', 15:'-', 16:'=', 100:'.'}
 
 fileNames = ['train0Bin.png', 'train1Bin.png', 'train2Bin.png', 'train3Bin.png', 
 			'train4Bin.png', 'train5Bin.png', 'train6Bin.png', 'train7Bin.png', 
@@ -22,27 +22,33 @@ trainLineSpaceWidth = [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 100]
 
 def generateFeatureData(filename, filenamePre = '', filenameOutputPre = None, lineSpaceWidth = 1):
 	hogDesc = cv2.HOGDescriptor((28,28), (28,28), (28,28), (4,4), 12)
-	characterData = trainingSetFromFile(filenamePre+filename, lineSpaceWidth)
+	characterTup = trainingSetFromFile(filenamePre+filename, lineSpaceWidth)
+	characterData = characterTup[0]
 	if filenameOutputPre is not None:
 		trainingDataFileAwayFileAwaaaaay(characterData, filenameOutputPre)
 	features = []
 	for character in characterData:
 		features.append(np.transpose(hogDesc.compute(character))[0,:])
-	return features
+	return (features, characterTup[1])
 
 trainFeatures = []
 trainLabels = []
 for i in range(0, len(fileNames)):
-	features = generateFeatureData(fileNames[i], 'trainingData/binary/', trainPrefix[i], trainLineSpaceWidth[i])
+	features = (generateFeatureData(fileNames[i], 'trainingData/binary/', trainPrefix[i], trainLineSpaceWidth[i]))[0]
 	trainFeatures = trainFeatures + features
 	trainLabels = trainLabels + ([i] * len(features))
 
-testFeatures = generateFeatureData('testVectorBin4.png', '', 'testData/test4_')
+testFeaturesTup = generateFeatureData('testVectorBin5.png', '', 'testData/test5_')
+testFeatures = testFeaturesTup[0]
+testPos = testFeaturesTup[1]
 testData = np.asarray(testFeatures)
 
 trainData = np.asarray(trainFeatures)
-
+testPos = np.asarray(testFeaturesTup[1])
 labels = np.asarray(trainLabels)
+
+print testPos
+print testFeaturesTup[1]
 
 
 svm_params = dict( kernel_type = cv2.SVM_LINEAR,
@@ -53,10 +59,34 @@ svm = cv2.SVM()
 svm.train(trainData,labels, params=svm_params)
 svm.save("handwriting_svm.xml")
 
+heights = testPos[:,1] - testPos[:,0]
+middles = (testPos[:,0] + testPos[:,1]) / 2
+widths = testPos[:, 2]
+maxHeight = np.max(heights)
+
 output = ''
-for testItem in testData:
-	result = svm.predict(testItem)
-	output = output + characterDict[int(result)]
+exponent = False
+for i in range(0,testData.shape[0]):
+	insertStr = ''
+	if heights[i] < 0.1*maxHeight and widths[i] < 0.1*maxHeight:
+		insertStr = '.'
+		result = 100
+	else:
+		testItem = testData[i]
+		result = svm.predict(testItem)
+		if i > 0 and result <= 9 and resultprev <= 11 and ((resultprev == 11 and testPos[i,1] < middles[i-1] - heights[i-1]*0.25) or (resultprev != 11 and testPos[i,1] < middles[i-1])):
+			insertStr = '^' + characterDict[int(result)]
+			exponent = True
+		elif i > 0 and result < 100 and resultprev <= 9 and ((result == 11 and testPos[i-1,1] < middles[i] + heights[i]*0.25) or (resultprev != 11 and testPos[i-1,1] < middles[i])):
+			insertStr = ')' + characterDict[int(result)]
+			exponent = False
+		else:
+			insertStr = characterDict[int(result)]
+	resultprev = result
+	output = output + insertStr
+
+if exponent:
+	output = output + ')'
 
 print output
 
